@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/danilocordeirodev/lamb-core/auth"
+	"github.com/danilocordeirodev/lamb-core/routers"
 )
 
 
@@ -74,6 +75,11 @@ func ProcessProducts(body string, path string, method string, user string, id in
 }
 
 func ProcessCategories(body string, path string, method string, user string, id int, request events.APIGatewayV2HTTPRequest) (int, string) {
+	switch method {
+	case "POST":
+		return routers.InsertCategory(body, user)
+	}
+	
 	return 400, "Method Invalid"
 }
 
