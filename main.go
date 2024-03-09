@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/danilocordeirodev/lamb-core/awsgo"
 	"github.com/danilocordeirodev/lamb-core/db"
+	"github.com/danilocordeirodev/lamb-core/handlers"
 )
 
 func main() {
@@ -21,18 +21,18 @@ func LambdaExecution(ctx context.Context, request events.APIGatewayV2HTTPRequest
 	awsgo.InitializeAWS()
 
 	if !ValidateParameters() {
-		fmt.Println("Error in parameters. Should send 'SecretManager', 'UserPoolId', 'Region', 'UrlPrefix'")
-		err := errors.New("Error in parameters. Should send 'SecretManager', 'UserPoolId', 'Region', 'UrlPrefix'")
+		fmt.Println("Error in parameters. Should send 'SecretManager', 'UrlPrefix'")
 	}
 
 	var res *events.APIGatewayProxyResponse
-	prefix := os.Getenv("UrlPrefix")
-	path := strings.Replace(request.RawPath, prefix, "", -1)
+	path := strings.Replace(request.RawPath, os.Getenv("UrlPrefix"), "", -1)
 	method := request.RequestContext.HTTP.Method
 	body := request.Body
 	header := request.Headers
 	
 	db.ReadSecret()
+
+	status, message := handlers.Handlers(path, method, body, header, request)
 
 	headersResp := map[string]string {
 		"Content-Type": "application/json",
@@ -50,16 +50,6 @@ func LambdaExecution(ctx context.Context, request events.APIGatewayV2HTTPRequest
 
 func ValidateParameters() bool {
 	_, checkParameter := os.LookupEnv("SecretName")
-	if !checkParameter {
-		return checkParameter
-	}
-
-	_, checkParameter = os.LookupEnv("UserPoolId")
-	if !checkParameter {
-		return checkParameter
-	}
-
-	_, checkParameter = os.LookupEnv("Region")
 	if !checkParameter {
 		return checkParameter
 	}
