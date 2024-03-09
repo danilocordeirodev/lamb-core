@@ -36,7 +36,7 @@ func Handlers(path string, method string, body string, headers map[string]string
 		return ProcessOrders(body, path, method, user, idn, request)
 	}
 
-	return 400, "Method Invalid"
+	return 400, "Method Invalid" + path[0:4]
 }
 
 func validAuth(path string, method string, headers map[string]string)(bool, int, string) {

@@ -60,7 +60,7 @@ func UserIsAdmin(userUUID string)(bool, string) {
 
 	defer Db.Close()
 
-	sql := "SELECT 1 FROM users WHERE User_UUID='"+userUUID+"' AND UserStatus = 0"
+	sql := "SELECT 1 FROM users WHERE User_UUID='"+userUUID+"' AND User_Status = 0"
 
 	rows, err := Db.Query(sql)
 	if err != nil {
