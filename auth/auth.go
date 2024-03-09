@@ -18,7 +18,7 @@ type TokenJSON struct {
 	Exp      int
 	Iat      int
 	ClientID string `json:"client_id"`
-	Username string `json:"cognito:username"`
+	Username string
 }
 
 func TokenValidation(token string) (bool, string, error) {
