@@ -75,3 +75,26 @@ func UpdateCategory(c models.Category) (error) {
 
 	return nil
 }
+
+func DeleteCategory(id int) (error) {
+	fmt.Println("Init DeleteCategory")
+
+	err := DbConnect()
+	if err != nil {
+		return err
+	}
+
+	defer Db.Close()
+
+	sql := "DELETE FROM category WHERE Categ_id = " + strconv.Itoa(id)
+	
+	_, err = Db.Exec(sql)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	fmt.Println("Delete Category > Successfully executed")
+
+	return nil
+}
